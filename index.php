@@ -4,12 +4,28 @@ require_once 'person.php';
 require_once 'student.php';
 require_once 'lecturer.php';
 
-// Contoh penggunaan kelas-kelas yang dimuat
-$student = new Student("Annisa Maghfirah", "2110817220002", "Universitas Lambung Mangkurat");
-$student->addCourse(["code" => "CSC101", "name" => "Pemrograman Web", "credit" => 3]);
-$student->addCourse(["code" => "MAT101", "name" => "Matematika Diskrit", "credit" => 3]);
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Ambil data yang dikirimkan melalui metode POST
+    $name = $_POST["name"];
+    $nim = $_POST["nim"];
+    $university = $_POST["university"];
+    $courses = $_POST["courses"];
+    $lecturerName = $_POST["lecturer"];
 
-$lecturer = new Lecturer("Ir. Eka Setya Wijaya, S.T., M.Kom");
+    // Buat objek Student dengan data yang diambil dari formulir
+    $student = new Student($name, $nim, $university);
 
-$student->consultAdvisor($lecturer);
+    foreach ($courses as $course) {
+        $student->addCourse([
+            "code" => $course["code"],
+            "name" => $course["name"],
+            "credit" => $course["credit"]
+        ]);
+    }
+
+    $lecturer = new Lecturer($lecturerName);
+
+    // Tampilkan data dari objek Student
+    $student->consultAdvisor($lecturer);
+}
 ?>
